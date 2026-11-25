@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LibraFlow – Smart Library Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="login-first">
+  <a class="skip" href="#explore">Skip to books</a>
+
+  <section id="member-access" class="member-access" aria-labelledby="memberTitle">
+    <div class="between">
+      <div>
+        <h2 id="memberTitle">Member Login</h2>
+        <p id="memberIntro" class="member-intro">Sign in with your membership details to issue books.</p>
+      </div>
+      <p id="memberStatus" class="member-status" aria-live="polite">You are not signed in.</p>
+    </div>
+    <div class="member-grid">
+      <div class="panel" id="loginPanel">
+        <h3>Sign in to your account</h3>
+        <form id="loginForm" class="mform" novalidate>
+          <div class="f"><label for="loginEmail">Email address</label><input id="loginEmail" type="email"
+              autocomplete="username" required></div>
+          <div class="f"><label for="loginPassword">Password</label><input id="loginPassword" type="password"
+              autocomplete="current-password" required></div>
+          <div class="f"><label for="loginMembershipId">Membership ID</label><input id="loginMembershipId"
+              autocomplete="off" required></div>
+          <p class="err" id="loginErr" role="alert"></p>
+          <div class="row"><button class="btn" type="submit">Sign in</button><button class="btn ghost"
+              id="showMembership" type="button">New membership</button></div>
+        </form>
+      </div>
+      <div class="panel" id="membershipPanel" hidden>
+        <h3>Get a new membership</h3>
+        <form id="membershipForm" class="mform" novalidate>
+          <div class="f"><label for="memberName">Full name</label><input id="memberName" autocomplete="name" required>
+          </div>
+          <div class="f"><label for="memberEmail">Email address</label><input id="memberEmail" type="email"
+              autocomplete="email" required></div>
+          <div class="f"><label for="memberPassword">Create password (at least 8 characters)</label><input
+              id="memberPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+          <p class="err" id="membershipErr" role="alert"></p>
+          <div class="row"><button class="btn" type="submit">Create membership</button><button class="btn ghost"
+              id="backToLogin" type="button">Back to login</button></div>
+        </form>
+        <p class="member-note">This demo stores membership details in this browser only. It is not connected to a
+          library account system.</p>
+      </div>
+    </div>
+  </section>
+
+  <header class="nav">
+    <div class="wrap nav-in">
+      <a href="#home" class="logo" aria-label="LibraFlow home">
+        <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="3" y="5" width="7" height="22" rx="2" fill="currentColor" />
+          <rect x="12" y="3" width="7" height="24" rx="2" fill="#c2a15a" />
+          <rect x="21" y="7" width="7" height="20" rx="2" fill="currentColor" opacity=".6" />
+        </svg>
+        LibraFlow
+      </a>
+      <nav id="menu" class="links" aria-label="Main">
+        <a href="#home">Home</a><a href="#explore">Explore Books</a><a href="#authors">Authors</a><a
+          href="#dashboard">Library Dashboard</a><a href="#manage">Manage Books</a>
+      </nav>
+      <div class="nav-act">
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode">◐</button>
+        <a class="btn" href="#explore">Explore Library</a>
+        <button class="btn danger sm" id="logoutBtn" type="button" hidden>Log out</button>
+        <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false"
+          aria-controls="menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero wrap">
+      <div class="hero-text">
+        <h1>Discover Your Next Favorite Book</h1>
+        <p>Explore a world of knowledge, discover inspiring authors, and manage your library with ease.</p>
+        <label class="sr" for="heroSearch">Search books</label>
+        <input id="heroSearch" class="search big" type="search" placeholder="Search by title, author or book ID…">
+        <div class="row">
+          <a class="btn" href="#explore">Explore Books</a>
+          <a class="btn ghost" href="#manage">Manage Library</a>
+        </div>
+        <div class="stats3">
+          <div><b id="hTotal">0</b><span>Total books</span></div>
+          <div><b id="hAvail">0</b><span>Available</span></div>
+          <div><b id="hIssued">0</b><span>Issued</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div id="heroCovers"></div>
+        <div class="shelf"></div>
+      </div>
+    </section>
+
+    <section class="wrap sec" aria-labelledby="featT">
+      <h2 id="featT">Featured Books</h2>
+      <div class="slider" id="slider" tabindex="0" aria-roledescription="carousel" aria-label="Featured books">
+        <div class="track" id="track"></div>
+        <button class="arrow prev" id="prev" aria-label="Previous slide">‹</button>
+        <button class="arrow next" id="next" aria-label="Next slide">›</button>
+        <div class="dots" id="dots"></div>
+      </div>
+    </section>
+
+    <section id="explore" class="wrap sec">
+      <h2>Explore Books</h2>
+      <div class="toolbar">
+        <div class="searchbox">
+          <label class="sr" for="q">Search by title, author or book ID</label>
+          <input id="q" class="search" type="search" placeholder="Search by title, author or book ID…"
+            autocomplete="off">
+          <button class="btn ghost sm" id="clearSearch" type="button">Clear</button>
+        </div>
+        <label class="sr" for="fGenre">Genre</label><select id="fGenre"></select>
+        <label class="sr" for="fAvail">Availability</label>
+        <select id="fAvail">
+          <option value="">Any availability</option>
+          <option value="available">Available</option>
+          <option value="issued">Issued</option>
+        </select>
+        <label class="sr" for="fAuthor">Author</label><select id="fAuthor"></select>
+        <label class="sr" for="fSort">Sort</label>
+        <select id="fSort">
+          <option value="az">Title A–Z</option>
+          <option value="za">Title Z–A</option>
+          <option value="recent">Recently added</option>
+        </select>
+      </div>
+      <p class="count" id="resultCount" aria-live="polite"></p>
+      <div class="grid" id="catalogue"></div>
+    </section>
+
+    <section id="authors" class="wrap sec">
+      <h2>Authors</h2>
+      <div class="grid authors" id="authorGrid"></div>
+    </section>
+
+    <section id="dashboard" class="wrap sec">
+      <div class="between">
+        <h2>Library Dashboard</h2><button class="btn danger sm" id="resetBtn">Clear Demo Data</button>
+      </div>
+      <div class="cards6" id="statCards"></div>
+
+      <div class="two">
+        <div class="panel">
+          <h3>Available vs issued</h3>
+          <div id="chart" class="chart"></div>
+        </div>
+        <div class="panel">
+          <h3>Library insights</h3>
+          <ul class="plain" id="insights"></ul>
+        </div>
+      </div>
+      <div class="two">
+        <div class="panel">
+          <h3>Recent activity</h3>
+          <ul class="plain" id="activity"></ul>
+        </div>
+        <div class="panel">
+          <h3>Popular books</h3>
+          <ul class="plain" id="popular"></ul>
+          <h3 class="mt">Recently added</h3>
+          <ul class="plain" id="recent"></ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="between">
+          <h3>Transactions</h3>
+          <div><label class="sr" for="txFilter">Filter transactions</label>
+            <select id="txFilter">
+              <option value="all">All Transactions</option>
+              <option value="current">Currently Issued</option>
+              <option value="returned">Returned Books</option>
+              <option value="overdue">Overdue Books</option>
+            </select>
+          </div>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Student ID</th>
+                <th>Issued</th>
+                <th>Due</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="txBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="manage" class="wrap sec">
+      <h2>Manage Books</h2>
+      <form id="bookForm" class="panel form" novalidate>
+        <div class="f"><label for="bTitle">Book title *</label><input id="bTitle" required></div>
+        <div class="f"><label for="bAuthor">Author name *</label><input id="bAuthor" required></div>
+        <div class="f"><label for="bId">Unique book ID *</label><input id="bId" required placeholder="e.g. LF-019">
+        </div>
+        <div class="f"><label for="bGenre">Genre</label><input id="bGenre" list="genreList"
+            placeholder="e.g. Fiction"><datalist id="genreList"></datalist></div>
+        <div class="f"><label for="bYear">Publication year</label><input id="bYear" type="number" min="1" max="2100">
+        </div>
+        <div class="f"><label for="bPub">Publisher</label><input id="bPub"></div>
+        <div class="f"><label for="bIsbn">ISBN (optional)</label><input id="bIsbn" autocomplete="off"
+            inputmode="numeric" placeholder="e.g. 9780132350884"></div>
+        <div class="f full"><label for="bCover">Book cover image URL</label><input id="bCover" type="url"
+            placeholder="https://… (optional)"></div>
+        <div class="f full"><label for="bDesc">Description</label><textarea id="bDesc" rows="3"></textarea></div>
+        <p class="err full" id="formErr" role="alert"></p>
+        <div class="row full"><button class="btn" type="submit">Add Book</button><button class="btn ghost" type="reset"
+            id="clearForm">Clear Form</button></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="foot">LibraFlow · Smart Library Management System · Data is stored in this browser only.</footer>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="x" id="modalClose" aria-label="Close dialog">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+
+</html>
